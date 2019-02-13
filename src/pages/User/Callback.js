@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { connect } from 'dva';
+// import { connect } from 'dva';
 import { Auth } from 'aws-amplify';
 
-@connect(({ login, loading }) => ({
-  login,
-  submitting: loading.effects['login/login'],
-}))
-class LoginPage extends Component {
+// @connect(({ login, loading }) => ({
+//   login,
+//   submitting: loading.effects['login/login'],
+// }))
+class CallbackPage extends Component {
 
   componentDidMount() {
     const config = Auth.configure();
@@ -23,4 +23,4 @@ class LoginPage extends Component {
   }
 }
 
-export default LoginPage;
+export default CallbackPage;

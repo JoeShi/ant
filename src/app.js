@@ -1,12 +1,9 @@
 import fetch from 'dva/fetch';
 import Amplify, { Auth } from 'aws-amplify';
 
-const oauth = {
+const oauthConfig = {
   // Domain name
   domain: 'accounts.joeshi.net',
-
-  clientId: '',
-
   // Authorized scopes
   scope: [
     'phone',
@@ -19,17 +16,24 @@ const oauth = {
   ],
 
   // Callback URL
-  redirectSignIn: 'http://localhost:8000/callback/',
+  redirectSignIn: 'http://localhost:8000/auth/callback/',
 
   // Sign out URL
-  redirectSignOut: 'http://localhost:8000/signout/',
+  redirectSignOut: 'http://localhost:8000/auth/signout/',
 
   // 'code' for Authorization code grant,
   // 'token' for Implicit grant
   responseType: 'token',
 };
 
-Auth.configure({ oauth });
+Amplify.configure({
+  Auth: {
+    userPoolWebClientId: 'dn0f59hudaup7l85o0uq6nrh2',
+    oauth: oauthConfig
+  }
+});
+
+// Auth.configure(oauth);
 
 export const dva = {
   config: {
