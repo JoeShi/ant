@@ -1,5 +1,5 @@
 import fetch from 'dva/fetch';
-import Amplify, { Auth } from 'aws-amplify';
+import Amplify from 'aws-amplify';
 
 const oauthConfig = {
   // Domain name
@@ -28,12 +28,12 @@ const oauthConfig = {
 
 Amplify.configure({
   Auth: {
+    userPoolId: 'us-west-2_r0k5rfBa5',
     userPoolWebClientId: 'dn0f59hudaup7l85o0uq6nrh2',
+    region: 'us-west-2',
     oauth: oauthConfig
   }
 });
-
-// Auth.configure(oauth);
 
 export const dva = {
   config: {
