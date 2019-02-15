@@ -1,36 +1,5 @@
 import fetch from 'dva/fetch';
-import Amplify, { Hub, Logger, Auth } from 'aws-amplify';
-
-const alex = new Logger('Alexander_the_auth_watcher');
-
-alex.onHubCapsule = (capsule) => {
-
-  switch (capsule.payload.event) {
-
-    case 'signIn':
-      console.log(capsule.payload);
-      alex.error('user signed in'); // [ERROR] Alexander_the_auth_watcher - user signed in
-      break;
-    case 'signUp':
-      alex.error('user signed up');
-      break;
-    case 'signOut':
-      alex.error('user signed out');
-      break;
-    case 'signIn_failure':
-      alex.error('user sign in failed');
-      break;
-    case 'configured':
-      alex.error('the Auth module is configured');
-      break;
-    default:
-      alex.log('hehe');
-  }
-};
-
-Hub.listen('auth', alex);
-
-
+import Amplify from 'aws-amplify';
 
 const oauthConfig = {
   // Domain name
