@@ -1,45 +1,9 @@
 // use localStorage to store the authority info, which might be sent from server in actual project.
-import jwt from 'jsonwebtoken';
-import jwkToPem from 'jwk-to-pem';
+
 import { Auth } from 'aws-amplify';
-import request from '@/utils/request';
-
-async function fetchPems(iss) {
-  const body = await request(`${iss}/.well-known/jwks.json`, {credentials: 'omit'});
-  const pems = {};
-  const { keys } = body;
-  for(let i = 0; i < keys.length; i += 1) {
-    const keyId = keys[i].kid;
-    const modulus = keys[i].n;
-    const exponent = keys[i].e;
-    const keyType = keys[i].kty;
-    const jwk = { kty: keyType, n: modulus, e: exponent };
-    pems[keyId] = jwkToPem(jwk);
-  }
-  return pems;
-}
-
-async function validatePems(pems, token, iss) {
-  const decodedJwt = jwt.decode(token, {complete: true});
-  if (!decodedJwt) {
-    return new Error("Invalid JWT token")
-  }
-
-  if (decodedJwt.payload.iss !== iss) {
-    return new Error("invalid issuer");
-  }
-
-  const { kid } = decodedJwt.header;
-  const pem = pems[kid];
-  if (!pem) {
-    return new Error('no key found');
-  }
-
-  return jwt.verify(token, pem, { issuer: iss });
-}
+import { fetchPems, validatePems } from '@/utils/jwt';
 
 export function getAuthority(str) {
-
   const awsAmplifyAccessTokenString = typeof str === 'undefined' ? localStorage.getItem('aws-amplify-access-token') : str;
   let authority;
   try {
@@ -73,6 +37,7 @@ export async function setAuthority(idToken, accessToken) {
   localStorage.setItem('aws-amplify-authority', JSON.stringify(scope.split(' ')));
   localStorage.setItem('aws-amplify-access-token', JSON.stringify(accessTokenPayload));
   localStorage.setItem('aws-amplify-id-token', JSON.stringify(idTokenPayload));
+  console.log('set local storage done')
 }
 
 

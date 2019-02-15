@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import queryString  from 'query-string';
 import { setAuthority } from '@/utils/authority';
+import { reloadAuthorized } from '@/utils/Authorized';
 import { routerRedux } from 'dva/router';
 
 @connect(({ login, loading }) => ({
@@ -11,9 +12,12 @@ import { routerRedux } from 'dva/router';
 class CallbackPage extends Component {
 
   componentDidMount() {
+
     const { dispatch } = this.props;
     const params = queryString.parse(window.location.hash);
+
     setAuthority(params.id_token, params.access_token).then(() => {
+      reloadAuthorized();
       const urlParams = new URL(window.location.href);
       let redirect = params.state;
       if (redirect) {
@@ -30,7 +34,7 @@ class CallbackPage extends Component {
       }
       dispatch(routerRedux.replace(redirect || '/'));
     }).catch(err => {
-      console.error(err)
+      console.error(err) // eslint-disable-line
     })
   }
 
